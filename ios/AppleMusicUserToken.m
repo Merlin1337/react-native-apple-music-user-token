@@ -53,8 +53,10 @@ RCT_EXPORT_METHOD(requestUserTokenForDeveloperToken:(NSString *)developerToken r
     SKCloudServiceController *cloudController = [[SKCloudServiceController alloc] init];
     [cloudController requestUserTokenForDeveloperToken:developerToken completionHandler:^(NSString *userToken, NSError *error) {
         if (error == nil && userToken != nil) {
+            NSLog(@"User token received: %@", userToken);
             resolve(@{ @"type" : @"success", @"token" : userToken });
         } else {
+            NSLog(@"Error occurred: %@, code: %ld", error.localizedDescription, (long)error.code);
             if (error.code == 1 || error.code == 6 || error.code == 7 || error.code == 9) {
                 // error.code == 1: Probably the user is not logged to with Apple account
                 // error.code == 6: The requesting app does not have the necessary permissions
