@@ -56,7 +56,7 @@ RCT_EXPORT_METHOD(requestUserTokenForDeveloperToken:(NSString *)developerToken r
             NSLog(@"User token received: %@", userToken);
             resolve(@{ @"type" : @"success", @"token" : userToken });
         } else {
-            NSLog(@"Error occurred: %@, code: %ld", error.localizedDescription, (long)error.code);
+            NSLog(@"Error domain: %@, code: %ld, description: %@", error.domain, (long)error.code, error.localizedDescription);
             if (error.code == 1 || error.code == 6 || error.code == 7 || error.code == 9) {
                 // error.code == 1: Probably the user is not logged to with Apple account
                 // error.code == 6: The requesting app does not have the necessary permissions
@@ -66,7 +66,7 @@ RCT_EXPORT_METHOD(requestUserTokenForDeveloperToken:(NSString *)developerToken r
                 return;
             }
             // For some reason error.code is not present in error obj recieved by js, so it is concatenated to msg
-            NSString *msg = [@"An unexpected error has occurred, native code: " stringByAppendingString:@(error.code).stringValue];
+            NSString *msg = [NSString stringWithFormat:@"An unexpected error has occurred, domain: %@, code: %ld, description: %@", error.domain, (long)error.code, error.localizedDescription];
             reject(@"unexpected_error", msg, error);
         }
     }];
